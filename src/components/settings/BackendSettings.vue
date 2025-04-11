@@ -111,12 +111,16 @@
           >
             {{ $t('restartCore') }}
           </button>
+        </template>
+        <template v-if="!isSingBox || isReF1ndSingBox">
           <button
             :class="twMerge('btn btn-sm', isConfigReloading ? 'animate-pulse' : '')"
             @click="handlerClickReloadConfigs"
           >
             {{ $t('reloadConfigs') }}
           </button>
+        </template>
+        <template v-if="!isSingBox">
           <button
             :class="twMerge('btn btn-sm', isGeoUpdating ? 'animate-pulse' : '')"
             @click="handlerClickUpdateGeo"
@@ -141,6 +145,7 @@
 import {
   flushFakeIPAPI,
   isCoreUpdateAvailable,
+  isReF1ndSingBox,
   isSingBox,
   reloadConfigsAPI,
   restartCoreAPI,

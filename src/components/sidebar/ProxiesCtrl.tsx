@@ -172,7 +172,9 @@ export default defineComponent({
                 key={mode}
                 value={mode}
               >
-                {t(mode.toLowerCase())}
+                {['global', 'rule', 'direct'].includes(mode.toLowerCase())
+                  ? t(mode.toLowerCase())
+                  : mode}
               </option>
             )
           })}

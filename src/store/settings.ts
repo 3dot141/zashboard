@@ -81,6 +81,7 @@ export const autoUpgrade = useStorage('config/auto-upgrade', false)
 export const checkUpgradeCore = useStorage('config/check-upgrade-core', true)
 export const autoUpgradeCore = useStorage('config/auto-upgrade-core', false)
 export const swipeInTabs = useStorage('config/swipe-in-tabs', false)
+export const disablePullToRefresh = useStorage('config/disable-pull-to-refresh', true)
 
 // overview
 export const splitOverviewPage = useStorage('config/split-overview-page', false)
@@ -122,6 +123,13 @@ export const displayGlobalByMode = useStorage('config/display-global-by-mode', f
 export const iconSize = useStorage('config/icon-size', 14)
 export const iconMarginRight = useStorage('config/icon-margin-right', 6)
 export const proxyCountMode = useStorage('config/proxies-count-mode', PROXY_COUNT_MODE.ALIVE_TOTAL)
+export const iconReflectList = useStorage<
+  {
+    icon: string
+    name: string
+    uuid: string
+  }[]
+>('config/icon-reflect-list', [])
 
 // connections
 export const useConnectionCard = useStorage('config/use-connecticon-card', window.innerWidth < 640)

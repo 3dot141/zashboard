@@ -133,25 +133,25 @@
             v-model="displayGlobalByMode"
           />
         </div>
-        <template v-if="hasIcon">
-          <div class="flex items-center gap-2">
-            {{ $t('iconSize') }}
-            <input
-              type="number"
-              class="input input-sm w-20"
-              v-model="iconSize"
-            />
-          </div>
-          <div class="flex items-center gap-2">
-            {{ $t('iconMarginRight') }}
-            <input
-              type="number"
-              class="input input-sm w-20"
-              v-model="iconMarginRight"
-            />
-          </div>
-        </template>
+        <div class="flex items-center gap-2">
+          {{ $t('iconSize') }}
+          <input
+            type="number"
+            class="input input-sm w-20"
+            v-model="iconSize"
+          />
+        </div>
+        <div class="flex items-center gap-2">
+          {{ $t('iconMarginRight') }}
+          <input
+            type="number"
+            class="input input-sm w-20"
+            v-model="iconMarginRight"
+          />
+        </div>
       </div>
+      <div class="divider"></div>
+      <IconSettings />
     </div>
   </div>
 </template>
@@ -160,7 +160,6 @@
 import { PROXY_CARD_SIZE, PROXY_COUNT_MODE, PROXY_PREVIEW_TYPE } from '@/constant'
 import { useTooltip } from '@/helper/tooltip'
 import { getMinCardWidth } from '@/helper/utils'
-import { proxyMap } from '@/store/proxies'
 import {
   displayGlobalByMode,
   iconMarginRight,
@@ -179,19 +178,15 @@ import {
   twoColumnProxyGroup,
 } from '@/store/settings'
 import { QuestionMarkCircleIcon } from '@heroicons/vue/24/outline'
-import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import TextInput from '../common/TextInput.vue'
+import IconSettings from './IconSettings.vue'
 
 const { showTip } = useTooltip()
 const { t } = useI18n()
 const independentLatencyTestTip = (e: Event) => {
   return showTip(e, t('independentLatencyTestTip'))
 }
-
-const hasIcon = computed(() => {
-  return Object.values(proxyMap.value).some((proxy) => !!proxy.icon)
-})
 
 const handlerProxyCardSizeChange = () => {
   minProxyCardWidth.value = getMinCardWidth(proxyCardSize.value)

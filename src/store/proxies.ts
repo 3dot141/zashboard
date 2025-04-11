@@ -18,6 +18,7 @@ import { ref } from 'vue'
 import { activeConnections } from './connections'
 import {
   automaticDisconnection,
+  iconReflectList,
   independentLatencyTest,
   IPv6test,
   speedtestTimeout,
@@ -94,12 +95,16 @@ export const fetchProxies = async () => {
     .map((proxy) => proxy.name)
   proxyProviederList.value = providers
 
-  Object.entries(proxyData.proxies).map(([name, proxy]) => {
+  proxyProviederList.value = providers
+
+  Object.entries(proxyMap.value).map(([name, proxy]) => {
+    const iconReflect = iconReflectList.value.find((icon) => icon.name === name)
+
+    if (iconReflect) {
+      proxyMap.value[name].icon = iconReflect.icon
+    }
     if (IPv6test.value && getIPv6FromExtra(proxy)) {
       IPv6Map.value[name] = true
-    }
-    if (proxy.hidden && !(name in hiddenGroupMap.value)) {
-      hiddenGroupMap.value[name] = true
     }
   })
 }

@@ -173,6 +173,10 @@ const ru: LANG_MESSAGE = {
   themeName: 'Название темы',
   save: 'Сохранить',
   moreDetails: 'Подробнее',
+  customIcon: 'Пользовательская иконка',
+  disablePullToRefresh: 'Отключить свойство обновления',
+  disablePullToRefreshTip:
+    'Компоненты Pull-to-refresh и виртуальной прокрутки иногда могут конфликтовать. Если при прокрутке вверх-вниз у вас часто возникают задержки или случайные срабатывания Pull-to-refresh, попробуйте отключить Pull-to-refresh.',
 }
 
 export default ru

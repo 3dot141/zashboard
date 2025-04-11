@@ -44,7 +44,10 @@
       </template>
       <template v-else>
         <OverviewCarousel
-          v-if="route.name !== ROUTE_NAME.overview"
+          v-if="
+            route.name !== ROUTE_NAME.overview &&
+            !(route.name === ROUTE_NAME.settings && !splitOverviewPage)
+          "
           class="w-xs"
         />
         <div class="card">
@@ -69,7 +72,11 @@ import { ROUTE_ICON_MAP, ROUTE_NAME } from '@/constant'
 import { renderRoutes } from '@/helper'
 import { useTooltip } from '@/helper/tooltip'
 import router from '@/router'
-import { isSidebarCollapsed, showStatisticsWhenSidebarCollapsed } from '@/store/settings'
+import {
+  isSidebarCollapsed,
+  showStatisticsWhenSidebarCollapsed,
+  splitOverviewPage,
+} from '@/store/settings'
 import { ArrowRightCircleIcon } from '@heroicons/vue/24/outline'
 import { twMerge } from 'tailwind-merge'
 import { computed } from 'vue'

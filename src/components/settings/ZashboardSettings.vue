@@ -145,10 +145,22 @@
             class="toggle"
           />
         </div>
+        <div class="flex items-center gap-2 md:hidden">
+          {{ $t('disablePullToRefresh') }}
+          <input
+            type="checkbox"
+            v-model="disablePullToRefresh"
+            class="toggle"
+          />
+          <QuestionMarkCircleIcon
+            class="h-4 w-4 cursor-pointer"
+            @mouseenter="showTip($event, $t('disablePullToRefreshTip'))"
+          />
+        </div>
       </div>
       <div
         class="flex items-center gap-2"
-        v-if="!isSingBox"
+        v-if="!isSingBox || isReF1ndSingBox"
       >
         {{ $t('autoUpgrade') }}
         <input
@@ -158,7 +170,7 @@
         />
       </div>
       <div class="grid max-w-3xl grid-cols-2 gap-2 sm:grid-cols-4">
-        <template v-if="!isSingBox">
+        <template v-if="!isSingBox || isReF1ndSingBox">
           <button
             :class="twMerge('btn btn-primary btn-sm', isUIUpgrading ? 'animate-pulse' : '')"
             @click="handlerClickUpgradeUI"
@@ -181,11 +193,12 @@
 </template>
 
 <script setup lang="ts">
-import { isSingBox, upgradeUIAPI, zashboardVersion } from '@/api'
+import { isReF1ndSingBox, isSingBox, upgradeUIAPI, zashboardVersion } from '@/api'
 import LanguageSelect from '@/components/settings/LanguageSelect.vue'
 import { useSettings } from '@/composables/settings'
 import { ALL_THEME, FONTS } from '@/constant'
 import { exportSettings } from '@/helper'
+import { useTooltip } from '@/helper/tooltip'
 import {
   deleteBase64FromIndexedDB,
   isPWA,
@@ -200,10 +213,16 @@ import {
   darkTheme,
   dashboardTransparent,
   defaultTheme,
+  disablePullToRefresh,
   font,
   swipeInTabs,
 } from '@/store/settings'
-import { ArrowPathIcon, ArrowUpCircleIcon, PlusIcon } from '@heroicons/vue/24/outline'
+import {
+  ArrowPathIcon,
+  ArrowUpCircleIcon,
+  PlusIcon,
+  QuestionMarkCircleIcon,
+} from '@heroicons/vue/24/outline'
 import { twMerge } from 'tailwind-merge'
 import { computed, ref } from 'vue'
 import ImportSettings from '../common/ImportSettings.vue'
@@ -211,6 +230,8 @@ import TextInput from '../common/TextInput.vue'
 import CustomTheme from './CustomTheme.vue'
 
 const customThemeModal = ref(false)
+
+const { showTip } = useTooltip()
 
 const inputFileRef = ref()
 const handlerClickUpload = () => {

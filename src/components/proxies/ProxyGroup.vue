@@ -19,7 +19,7 @@
             @click.stop="handlerGroupToggle"
           >
             <EyeIcon
-              v-if="!hiddenGroupMap[proxyGroup.name]"
+              v-if="!hiddenGroup"
               class="h-3 w-3"
             />
             <EyeSlashIcon
@@ -74,10 +74,12 @@
         @nodeclick="handlerProxySelect($event)"
       />
     </template>
-    <template v-slot:content>
+    <template v-slot:content="{ showFullContent }">
       <ProxyNodeGrid>
         <ProxyNodeCard
-          v-for="node in renderProxies"
+          v-for="node in showFullContent
+            ? renderProxies
+            : renderProxies.slice(0, twoColumnProxyGroup ? 48 : 96)"
           :key="node"
           :name="node"
           :group-name="proxyGroup.name"
@@ -90,9 +92,10 @@
 </template>
 
 <script setup lang="ts">
+import { useBounceOnVisible } from '@/composables/bouncein'
 import { useRenderProxies } from '@/composables/renderProxies'
 import { PROXY_TYPE } from '@/constant'
-import { prettyBytesHelper } from '@/helper'
+import { isHiddenGroup, prettyBytesHelper } from '@/helper'
 import { useTooltip } from '@/helper/tooltip'
 import { activeConnections } from '@/store/connections'
 import {
@@ -103,7 +106,7 @@ import {
   proxyMap,
   selectProxy,
 } from '@/store/proxies'
-import { manageHiddenGroup } from '@/store/settings'
+import { manageHiddenGroup, twoColumnProxyGroup } from '@/store/settings'
 import {
   ArrowRightCircleIcon,
   CheckCircleIcon,
@@ -147,8 +150,15 @@ const downloadTotal = computed(() => {
   return speed
 })
 
+const hiddenGroup = computed({
+  get: () => isHiddenGroup(props.name),
+  set: (value: boolean) => {
+    hiddenGroupMap.value[props.name] = value
+  },
+})
+
 const handlerGroupToggle = () => {
-  hiddenGroupMap.value[props.name] = !hiddenGroupMap.value[props.name]
+  hiddenGroup.value = !hiddenGroup.value
 }
 
 const { showTip } = useTooltip()
@@ -178,4 +188,6 @@ const handlerProxySelect = async (name: string) => {
 
   selectProxy(props.name, name)
 }
+
+useBounceOnVisible()
 </script>

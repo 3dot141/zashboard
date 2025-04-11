@@ -1,4 +1,5 @@
 import { disconnectByIdAPI } from '@/api'
+import { useBounceOnVisible } from '@/composables/bouncein'
 import { useConnections } from '@/composables/connections'
 import { CONNECTIONS_TABLE_ACCESSOR_KEY, PROXY_CHAIN_DIRECTION } from '@/constant'
 import {
@@ -35,6 +36,8 @@ export default defineComponent<{
   name: 'ConnectionCard',
   setup(props) {
     const { handlerInfo } = useConnections()
+
+    useBounceOnVisible()
 
     return () => {
       const conn = props.conn

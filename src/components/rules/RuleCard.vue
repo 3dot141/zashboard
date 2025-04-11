@@ -40,6 +40,7 @@
 </template>
 
 <script setup lang="ts">
+import { useBounceOnVisible } from '@/composables/bouncein'
 import { NOT_CONNECTED } from '@/constant'
 import { getColorForLatency } from '@/helper'
 import { getLatencyByName, getNowProxyNodeName, proxyMap } from '@/store/proxies'
@@ -67,4 +68,6 @@ const size = computed(() => {
 
   return props.rule.size
 })
+
+useBounceOnVisible()
 </script>

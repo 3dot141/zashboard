@@ -65,7 +65,7 @@
             @click.stop="handlerGroupToggle"
           >
             <EyeIcon
-              v-if="!hiddenGroupMap[proxyGroup.name]"
+              v-if="!hiddenGroup"
               class="h-3 w-3"
             />
             <EyeSlashIcon
@@ -103,8 +103,10 @@
 </template>
 
 <script setup lang="ts">
+import { useBounceOnVisible } from '@/composables/bouncein'
 import { useRenderProxies } from '@/composables/renderProxies'
 import { PROXY_TYPE } from '@/constant'
+import { isHiddenGroup } from '@/helper'
 import { useTooltip } from '@/helper/tooltip'
 import { hiddenGroupMap, proxyGroupLatencyTest, proxyMap, selectProxy } from '@/store/proxies'
 import { manageHiddenGroup } from '@/store/settings'
@@ -195,8 +197,15 @@ const handlerLatencyTest = async () => {
     isLatencyTesting.value = false
   }
 }
+const hiddenGroup = computed({
+  get: () => isHiddenGroup(props.name),
+  set: (value: boolean) => {
+    hiddenGroupMap.value[props.name] = value
+  },
+})
+
 const handlerGroupToggle = () => {
-  hiddenGroupMap.value[props.name] = !hiddenGroupMap.value[props.name]
+  hiddenGroup.value = !hiddenGroup.value
 }
 
 const handlerProxySelect = (name: string) => {
@@ -212,4 +221,6 @@ const tipForFixed = (e: Event) => {
     delay: [500, 0],
   })
 }
+
+useBounceOnVisible()
 </script>

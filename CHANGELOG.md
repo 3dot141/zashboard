@@ -2,6 +2,64 @@
 
 # Changelog
 
+## [1.77.0](https://github.com/Zephyruso/zashboard/compare/v1.76.3...v1.77.0) (2025-04-11)
+
+
+### Features
+
+* bouncein animation for mobile ([a1e9d38](https://github.com/Zephyruso/zashboard/commit/a1e9d38b3f98d28ee0a100635e5c4e79aa0c660f))
+
+
+### Bug Fixes
+
+* chart performance ([ca7b861](https://github.com/Zephyruso/zashboard/commit/ca7b861fea8e03fc8d9ba94863d561fb1dd52c8c))
+
+## [1.76.3](https://github.com/Zephyruso/zashboard/compare/v1.76.2...v1.76.3) (2025-04-10)
+
+
+### Bug Fixes
+
+* merge same sourceip label options ([43a8576](https://github.com/Zephyruso/zashboard/commit/43a8576eddab71f5c7590a166b9a84dc738bea1a))
+* performance for page switch ([f25b5bc](https://github.com/Zephyruso/zashboard/commit/f25b5bc12e46e4482da48597ad967ddbaa5293ee))
+* swipe animation performance ([9837522](https://github.com/Zephyruso/zashboard/commit/98375229e1db1efb8d8047e2f592ca56950fee53))
+
+## [1.76.2](https://github.com/Zephyruso/zashboard/compare/v1.76.1...v1.76.2) (2025-04-02)
+
+
+### Bug Fixes
+
+* hidden group icon status ([89d459a](https://github.com/Zephyruso/zashboard/commit/89d459ab56c718de2d0cc3440bf71c13493abaaf))
+* make disable pull to refresh optional ([56e2273](https://github.com/Zephyruso/zashboard/commit/56e2273da856510f95b95aba19b208798366183e))
+
+## [1.76.1](https://github.com/Zephyruso/zashboard/compare/v1.76.0...v1.76.1) (2025-03-30)
+
+
+### Bug Fixes
+
+* catch icon settings empty ([1e95227](https://github.com/Zephyruso/zashboard/commit/1e95227f34c3b076db09c310a3d7b6e210d5b071))
+* chart style in sidebar ([88e4b17](https://github.com/Zephyruso/zashboard/commit/88e4b176cd28d636a542d2dda820396638ee00c5))
+
+## [1.76.0](https://github.com/Zephyruso/zashboard/compare/v1.75.2...v1.76.0) (2025-03-26)
+
+
+### Features
+
+* custom icon for sing-box ([6db29e2](https://github.com/Zephyruso/zashboard/commit/6db29e2b7a2cc885a3ae67fd301bf18df1922996))
+
+
+### Bug Fixes
+
+* outline style ([c840ab2](https://github.com/Zephyruso/zashboard/commit/c840ab2d71ff8f4f118ac98dc7d00bff3b400e71))
+
+## [1.75.2](https://github.com/Zephyruso/zashboard/compare/v1.75.1...v1.75.2) (2025-03-24)
+
+
+### Bug Fixes
+
+* collapse animation performance ([9c72e96](https://github.com/Zephyruso/zashboard/commit/9c72e961725a15196188edb3731c8c48d6944237))
+* missing collapse all btn in mobile ([3e7ee22](https://github.com/Zephyruso/zashboard/commit/3e7ee224f0646820f6f3635c37d8b05a95644457))
+* region for details ([eaf8cf1](https://github.com/Zephyruso/zashboard/commit/eaf8cf1127bafaa6dfa83d9d90f60ae972489e3c))
+
 ## [1.75.1](https://github.com/Zephyruso/zashboard/compare/v1.75.0...v1.75.1) (2025-03-21)
 
 
