@@ -5,8 +5,7 @@ WORKDIR /build
 
 COPY . .
 
-RUN corepack enable
-RUN corepack prepare pnpm@latest --activate
+RUN npm install -g pnpm
 RUN pnpm install
 RUN pnpm build
 
