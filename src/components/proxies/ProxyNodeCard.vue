@@ -88,7 +88,7 @@ const isSmallCard = computed(() => proxyCardSize.value === PROXY_CARD_SIZE.SMALL
 const typeDescription = computed(() => {
   const type = typeFormatter(node.value.type)
   const isV6 = IPv6test.value && getIPv6ByName(node.value.name) ? 'IPv6' : ''
-  const isUDP = node.value.xudp ? 'xudp' : node.value.udp ? 'udp' : ''
+  const isUDP = node.value.udp ? (node.value.xudp ? 'xudp' : 'udp') : ''
 
   return [type, isUDP, isV6].filter(Boolean).join(isSmallCard.value ? '/' : ' / ')
 })

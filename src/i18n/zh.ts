@@ -174,6 +174,17 @@ const zh: LANG_MESSAGE = {
   disablePullToRefresh: '禁用下拉刷新',
   disablePullToRefreshTip:
     '下拉刷新和虚拟滚动的组件有时会有冲突，如果你在上下滚动的时候经常卡顿或者误触发下拉刷新，可以尝试禁用下拉刷新',
+  displayAllFeatures: '显示所有功能',
+  displayAllFeaturesTip:
+    '显示所有功能，包括sing-box官方版本不支持的功能，如果您使用了fork版本的sing-box支持其中的某些功能，可以尝试启用',
+  blurIntensity: '毛玻璃强度',
+  scrollAnimationEffect: '滚动动画效果',
+  importFromFile: '从文件导入',
+  importFromUrl: '从 URL 导入',
+  sync: '同步',
+  upgradeSuccess: '更新成功',
+  upgradeFailed: '更新失败',
+  numberOfChartsInSidebar: '侧边栏图表数量',
 }
 
 export default zh

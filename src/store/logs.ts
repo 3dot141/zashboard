@@ -5,7 +5,7 @@ import { useStorage } from '@vueuse/core'
 import dayjs from 'dayjs'
 import { throttle } from 'lodash'
 import { ref, watch } from 'vue'
-import { language, logRetentionLimit, sourceIPLabelList } from './settings'
+import { logRetentionLimit, sourceIPLabelList } from './settings'
 
 export const logs = ref<LogWithSeq[]>([])
 export const logFilter = ref('')
@@ -65,7 +65,7 @@ export const initLogs = () => {
 
     logsTemp.unshift({
       ...data,
-      time: dayjs().locale(language.value).format('HH:mm:ss'),
+      time: dayjs().format('HH:mm:ss'),
       seq: idx++,
     })
 

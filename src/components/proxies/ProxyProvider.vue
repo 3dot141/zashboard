@@ -62,6 +62,7 @@
 
 <script setup lang="ts">
 import { proxyProviderHealthCheckAPI, updateProxyProviderAPI } from '@/api'
+import { useBounceOnVisible } from '@/composables/bouncein'
 import { useRenderProxies } from '@/composables/renderProxies'
 import { fromNow, prettyBytesHelper } from '@/helper'
 import { fetchProxies, proxyProviederList } from '@/store/proxies'
@@ -145,4 +146,6 @@ const updateProviderClickHandler = async () => {
     isUpdating.value = false
   }
 }
+
+useBounceOnVisible()
 </script>

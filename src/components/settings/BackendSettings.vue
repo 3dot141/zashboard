@@ -27,7 +27,7 @@
     <div class="card-body gap-4">
       <BackendSwitch />
 
-      <template v-if="!isSingBox && configs">
+      <template v-if="(!isSingBox || displayAllFeatures) && configs">
         <div class="divider"></div>
         <div class="grid max-w-3xl grid-cols-2 gap-2 lg:grid-cols-3">
           <div
@@ -97,7 +97,7 @@
         class="grid max-w-4xl grid-cols-2 gap-2 md:grid-cols-3 lg:grid-cols-5"
         v-if="version"
       >
-        <template v-if="!isSingBox">
+        <template v-if="!isSingBox || displayAllFeatures">
           <button
             v-if="!activeBackend?.disableUpgradeCore"
             :class="twMerge('btn btn-primary btn-sm', isCoreUpgrading ? 'animate-pulse' : '')"
@@ -111,16 +111,12 @@
           >
             {{ $t('restartCore') }}
           </button>
-        </template>
-        <template v-if="!isSingBox || isReF1ndSingBox">
           <button
             :class="twMerge('btn btn-sm', isConfigReloading ? 'animate-pulse' : '')"
             @click="handlerClickReloadConfigs"
           >
             {{ $t('reloadConfigs') }}
           </button>
-        </template>
-        <template v-if="!isSingBox">
           <button
             :class="twMerge('btn btn-sm', isGeoUpdating ? 'animate-pulse' : '')"
             @click="handlerClickUpdateGeo"
@@ -145,7 +141,6 @@
 import {
   flushFakeIPAPI,
   isCoreUpdateAvailable,
-  isReF1ndSingBox,
   isSingBox,
   reloadConfigsAPI,
   restartCoreAPI,
@@ -156,10 +151,11 @@ import {
 import BackendVersion from '@/components/common/BackendVersion.vue'
 import BackendSwitch from '@/components/settings/BackendSwitch.vue'
 import DnsQuery from '@/components/settings/DnsQuery.vue'
+import { handlerUpgradeResponse } from '@/helper'
 import { configs, fetchConfigs, updateConfigs } from '@/store/config'
 import { fetchProxies } from '@/store/proxies'
 import { fetchRules } from '@/store/rules'
-import { autoUpgradeCore, checkUpgradeCore } from '@/store/settings'
+import { autoUpgradeCore, checkUpgradeCore, displayAllFeatures } from '@/store/settings'
 import { activeBackend } from '@/store/setup'
 import type { Config } from '@/types'
 import { twMerge } from 'tailwind-merge'
@@ -214,10 +210,13 @@ const handlerClickUpgradeCore = async () => {
   if (isCoreUpgrading.value) return
   isCoreUpgrading.value = true
   try {
-    await upgradeCoreAPI()
+    const res = await upgradeCoreAPI()
     reloadAll()
+
+    handlerUpgradeResponse(res)
     isCoreUpgrading.value = false
-  } catch {
+  } catch (e) {
+    console.error(e)
     isCoreUpgrading.value = false
   }
 }

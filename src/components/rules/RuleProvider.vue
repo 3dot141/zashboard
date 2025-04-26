@@ -24,6 +24,7 @@
 
 <script setup lang="ts">
 import { updateRuleProviderAPI } from '@/api'
+import { useBounceOnVisible } from '@/composables/bouncein'
 import { fromNow } from '@/helper'
 import { fetchRules } from '@/store/rules'
 import type { RuleProvider } from '@/types'
@@ -44,4 +45,6 @@ const updateRuleProviderClickHandler = async () => {
   fetchRules()
   isUpdating.value = false
 }
+
+useBounceOnVisible()
 </script>

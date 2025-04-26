@@ -175,6 +175,17 @@ const en = {
   disablePullToRefresh: 'Disable Pull To Refresh',
   disablePullToRefreshTip:
     'Pull-to-refresh and virtual scrolling components may sometimes conflict. If you often experience lag or accidentally trigger pull-to-refresh while scrolling up and down, you can try disabling pull-to-refresh.',
+  displayAllFeatures: 'Display All Features',
+  displayAllFeaturesTip:
+    'Show all features, including those not supported by the official version of sing-box. If you are using a forked version of sing-box that supports some of these features, you can try enabling them.',
+  blurIntensity: 'Blurry Effect',
+  scrollAnimationEffect: 'Scroll Animation Effect',
+  importFromFile: 'Import From File',
+  importFromUrl: 'Import From URL',
+  sync: 'Sync',
+  upgradeSuccess: 'Upgrade Success',
+  upgradeFailed: 'Upgrade Failed',
+  numberOfChartsInSidebar: 'Number of Charts in Sidebar',
 }
 
 export type LANG_MESSAGE = typeof en

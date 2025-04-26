@@ -177,6 +177,17 @@ const ru: LANG_MESSAGE = {
   disablePullToRefresh: 'Отключить свойство обновления',
   disablePullToRefreshTip:
     'Компоненты Pull-to-refresh и виртуальной прокрутки иногда могут конфликтовать. Если при прокрутке вверх-вниз у вас часто возникают задержки или случайные срабатывания Pull-to-refresh, попробуйте отключить Pull-to-refresh.',
+  displayAllFeatures: 'Показать все функции',
+  displayAllFeaturesTip:
+    'Показать все функции, включая те, которые не поддерживаются официальной версией sing-box. Если вы используете форк sing-box, поддерживающий некоторые из этих функций, вы можете попробовать их включить.',
+  blurIntensity: 'Интенсивность размытия',
+  scrollAnimationEffect: 'Эффект анимации прокрутки',
+  importFromFile: 'Импортировать из файла',
+  importFromUrl: 'Импортировать из URL',
+  sync: 'Синхронизировать',
+  upgradeSuccess: 'Обновление успешно',
+  upgradeFailed: 'Обновление не удалось',
+  numberOfChartsInSidebar: 'Количество графиков в боковой панели',
 }
 
 export default ru

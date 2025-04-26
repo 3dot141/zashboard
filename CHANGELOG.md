@@ -2,6 +2,73 @@
 
 # Changelog
 
+## [1.81.0](https://github.com/Zephyruso/zashboard/compare/v1.80.2...v1.81.0) (2025-04-23)
+
+
+### Features
+
+* inbound user column ([7db4d1b](https://github.com/Zephyruso/zashboard/commit/7db4d1bbdd23c043e5b8cd9f503a96239053667e))
+* notification for upgrade result ([a5adac3](https://github.com/Zephyruso/zashboard/commit/a5adac3be271598db4baf85f39f4dc98855650c8))
+* setting for number of charts in sidebar ([0f61f4d](https://github.com/Zephyruso/zashboard/commit/0f61f4da39a57600cd978a40bd1462810120395e))
+
+
+### Bug Fixes
+
+* icon settings collapse style ([7a17311](https://github.com/Zephyruso/zashboard/commit/7a173114da06fe31a7df25a0c1049c308b7b19c7))
+* safe area for bottom ([72b3682](https://github.com/Zephyruso/zashboard/commit/72b36821e32675850796564f2f23994fcf03cef4))
+
+## [1.80.2](https://github.com/Zephyruso/zashboard/compare/v1.80.1...v1.80.2) (2025-04-18)
+
+
+### Bug Fixes
+
+* input select style ([f20ed11](https://github.com/Zephyruso/zashboard/commit/f20ed1186c2ce63f670bc0e42cff7d78751b063e))
+* modal opacity style ([5c56ddc](https://github.com/Zephyruso/zashboard/commit/5c56ddc7f9184871deacdfa29814ca8bb94b04cc))
+
+## [1.80.1](https://github.com/Zephyruso/zashboard/compare/v1.80.0...v1.80.1) (2025-04-17)
+
+
+### Bug Fixes
+
+* 0 in memory ws ([870dc0f](https://github.com/Zephyruso/zashboard/commit/870dc0f127b4a8047f8e31a0ad33dbfb6b2c0666))
+* style for transparent ([6e54ac3](https://github.com/Zephyruso/zashboard/commit/6e54ac322b6d8feb304ff370a003056c7e99ed39))
+
+## [1.80.0](https://github.com/Zephyruso/zashboard/compare/v1.79.0...v1.80.0) (2025-04-16)
+
+
+### Features
+
+* blur intensity ([cc73668](https://github.com/Zephyruso/zashboard/commit/cc73668889d18f177065406b9633329c76edba1f))
+* import settings from url ([a67a337](https://github.com/Zephyruso/zashboard/commit/a67a33718b51217e86eeef4b819af573a7a973f6))
+
+
+### Bug Fixes
+
+* proxy group invisible ([461aa0b](https://github.com/Zephyruso/zashboard/commit/461aa0b1ea81b640ce7a174df31531ced4636999))
+
+## [1.79.0](https://github.com/Zephyruso/zashboard/compare/v1.78.0...v1.79.0) (2025-04-15)
+
+
+### Features
+
+* blurry effect ([8398a43](https://github.com/Zephyruso/zashboard/commit/8398a435bfffb8aaaaac22423fb33dc6e76378ad))
+* display all features setting for sing-box fork ([f309a89](https://github.com/Zephyruso/zashboard/commit/f309a89d193556f01663782b2ca8772390b8a6bf))
+* switch for scroll animation ([1d9062b](https://github.com/Zephyruso/zashboard/commit/1d9062b60274e09a4afd350eddbdbe9155f4c477))
+
+
+### Bug Fixes
+
+* bounce animation flicker ([7ceafb9](https://github.com/Zephyruso/zashboard/commit/7ceafb91cf0ae1f433c22abfc9d25f465bbacb8a))
+* translate for mode ([2660118](https://github.com/Zephyruso/zashboard/commit/2660118f9103b802d6ec4051238974146eb8d040))
+
+## [1.78.0](https://github.com/Zephyruso/zashboard/compare/v1.77.0...v1.78.0) (2025-04-13)
+
+
+### Features
+
+* reF1nd sing-box ([16c4f47](https://github.com/Zephyruso/zashboard/commit/16c4f47ba6a19d7196c4774d96c4de4917adedce))
+* update rule provider in rules ([1a9605c](https://github.com/Zephyruso/zashboard/commit/1a9605c89d4c99e67cff76e460ab9118b862e385))
+
 ## [1.77.0](https://github.com/Zephyruso/zashboard/compare/v1.76.3...v1.77.0) (2025-04-11)
 
 

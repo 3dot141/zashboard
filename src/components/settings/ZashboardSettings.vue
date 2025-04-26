@@ -99,9 +99,9 @@
         </div>
         <div class="flex items-center gap-2">
           <span class="shrink-0"> {{ $t('customBackgroundURL') }} </span>
-          <div class="join">
+          <div class="join flex-1">
             <TextInput
-              class="join-item max-w-64 flex-1"
+              class="join-item w-48 max-w-64 flex-1"
               v-model="customBackgroundURL"
               :clearable="true"
               @update:modelValue="handlerBackgroundURLChange"
@@ -121,20 +121,41 @@
             @change="handlerFileChange"
           />
         </div>
-        <div
-          class="flex items-center gap-2"
-          v-if="customBackgroundURL"
-        >
-          {{ $t('transparent') }}
+        <template v-if="customBackgroundURL">
+          <div class="flex items-center gap-2">
+            {{ $t('transparent') }}
+            <input
+              type="range"
+              min="0"
+              max="100"
+              v-model="dashboardTransparent"
+              class="range max-w-64"
+              @touchstart.stop
+              @touchmove.stop
+              @touchend.stop
+            />
+          </div>
+
+          <div class="flex items-center gap-2">
+            {{ $t('blurIntensity') }}
+            <input
+              type="range"
+              min="0"
+              max="40"
+              v-model="blurIntensity"
+              class="range max-w-64"
+              @touchstart.stop
+              @touchmove.stop
+              @touchend.stop
+            />
+          </div>
+        </template>
+        <div class="flex items-center gap-2 md:hidden">
+          {{ $t('scrollAnimationEffect') }}
           <input
-            type="range"
-            min="0"
-            max="100"
-            v-model="dashboardTransparent"
-            class="range max-w-64"
-            @touchstart.stop
-            @touchmove.stop
-            @touchend.stop
+            type="checkbox"
+            v-model="scrollAnimationEffect"
+            class="toggle"
           />
         </div>
         <div class="flex items-center gap-2 md:hidden">
@@ -157,10 +178,25 @@
             @mouseenter="showTip($event, $t('disablePullToRefreshTip'))"
           />
         </div>
+        <div
+          class="flex items-center gap-2"
+          v-if="isSingBox"
+        >
+          {{ $t('displayAllFeatures') }}
+          <input
+            type="checkbox"
+            v-model="displayAllFeatures"
+            class="toggle"
+          />
+          <QuestionMarkCircleIcon
+            class="h-4 w-4 cursor-pointer"
+            @mouseenter="showTip($event, $t('displayAllFeaturesTip'))"
+          />
+        </div>
       </div>
       <div
         class="flex items-center gap-2"
-        v-if="!isSingBox || isReF1ndSingBox"
+        v-if="!isSingBox || displayAllFeatures"
       >
         {{ $t('autoUpgrade') }}
         <input
@@ -170,7 +206,7 @@
         />
       </div>
       <div class="grid max-w-3xl grid-cols-2 gap-2 sm:grid-cols-4">
-        <template v-if="!isSingBox || isReF1ndSingBox">
+        <template v-if="!isSingBox || displayAllFeatures">
           <button
             :class="twMerge('btn btn-primary btn-sm', isUIUpgrading ? 'animate-pulse' : '')"
             @click="handlerClickUpgradeUI"
@@ -193,11 +229,11 @@
 </template>
 
 <script setup lang="ts">
-import { isReF1ndSingBox, isSingBox, upgradeUIAPI, zashboardVersion } from '@/api'
+import { isSingBox, upgradeUIAPI, zashboardVersion } from '@/api'
 import LanguageSelect from '@/components/settings/LanguageSelect.vue'
 import { useSettings } from '@/composables/settings'
 import { ALL_THEME, FONTS } from '@/constant'
-import { exportSettings } from '@/helper'
+import { exportSettings, handlerUpgradeResponse } from '@/helper'
 import { useTooltip } from '@/helper/tooltip'
 import {
   deleteBase64FromIndexedDB,
@@ -208,13 +244,16 @@ import {
 import {
   autoTheme,
   autoUpgrade,
+  blurIntensity,
   customBackgroundURL,
   customThemes,
   darkTheme,
   dashboardTransparent,
   defaultTheme,
   disablePullToRefresh,
+  displayAllFeatures,
   font,
+  scrollAnimationEffect,
   swipeInTabs,
 } from '@/store/settings'
 import {
@@ -261,9 +300,15 @@ const handlerClickUpgradeUI = async () => {
   if (isUIUpgrading.value) return
   isUIUpgrading.value = true
   try {
-    await upgradeUIAPI()
+    const res = await upgradeUIAPI()
     isUIUpgrading.value = false
-    window.location.reload()
+
+    handlerUpgradeResponse(res)
+    if (res.status === 200) {
+      setTimeout(() => {
+        window.location.reload()
+      }, 1000)
+    }
   } catch {
     isUIUpgrading.value = false
   }

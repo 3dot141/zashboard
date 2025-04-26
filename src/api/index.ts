@@ -37,7 +37,6 @@ export const fetchVersionAPI = () => {
   return axios.get<{ version: string }>('/version')
 }
 export const isSingBox = computed(() => version.value?.includes('sing-box'))
-export const isReF1ndSingBox = computed(() => isSingBox.value && version.value?.includes('reF1nd'))
 export const zashboardVersion = ref(__APP_VERSION__)
 
 watch(
@@ -46,7 +45,7 @@ watch(
     if (val) {
       const { data } = await fetchVersionAPI()
 
-      version.value = data.version
+      version.value = data?.version || ''
       if (isSingBox.value || !checkUpgradeCore.value || activeBackend.value?.disableUpgradeCore)
         return
       isCoreUpdateAvailable.value = await fetchBackendUpdateAvailableAPI()
