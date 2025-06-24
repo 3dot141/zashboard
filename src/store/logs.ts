@@ -6,9 +6,11 @@ import dayjs from 'dayjs'
 import { throttle } from 'lodash'
 import { ref, watch } from 'vue'
 import { logRetentionLimit, sourceIPLabelList } from './settings'
+import { activeBackend } from './setup'
 
 export const logs = ref<LogWithSeq[]>([])
 export const logFilter = ref('')
+export const logTypeFilter = ref('')
 export const isPaused = ref(false)
 export const logLevel = useStorage<string>('config/log-level', LOG_LEVEL.Info)
 
@@ -23,7 +25,8 @@ const sliceLogs = throttle(() => {
 const ipSourceMatchs: [RegExp, string][] = []
 const restructMatchs = () => {
   ipSourceMatchs.length = 0
-  for (const { key, label } of sourceIPLabelList.value) {
+  for (const { key, label, scope } of sourceIPLabelList.value) {
+    if (scope && !scope.includes(activeBackend.value?.uuid as string)) continue
     if (key.startsWith('/')) continue
     const regex = new RegExp(key + ':', 'ig')
 
@@ -32,12 +35,13 @@ const restructMatchs = () => {
 }
 
 watch(
-  sourceIPLabelList,
+  () => [sourceIPLabelList.value, activeBackend.value],
   () => {
     restructMatchs()
   },
   {
     immediate: true,
+    deep: true,
   },
 )
 

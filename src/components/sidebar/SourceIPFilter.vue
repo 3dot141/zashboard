@@ -16,16 +16,40 @@
 </template>
 
 <script setup lang="ts">
-import { getIPLabelFromMap } from '@/helper'
+import { getIPLabelFromMap } from '@/helper/sourceip'
 import { connections, sourceIPFilter } from '@/store/connections'
+import * as ipaddr from 'ipaddr.js'
 import { isEqual, uniq } from 'lodash'
 import { computed, ref, watch } from 'vue'
+
 defineProps<{
   horizontal?: boolean
 }>()
 
 const sourceIPs = computed(() => {
-  return uniq(connections.value.map((conn) => conn.metadata.sourceIP)).sort()
+  return uniq(connections.value.map((conn) => conn.metadata.sourceIP)).sort((a, b) => {
+    if (!ipaddr.isValid(a)) return -1
+    if (!ipaddr.isValid(b)) return 1
+
+    const preIP = ipaddr.parse(a)
+    const nextIP = ipaddr.parse(b)
+
+    const isPreIPv4 = preIP.kind() === 'ipv4'
+    const isNextIPv4 = nextIP.kind() === 'ipv4'
+
+    if (!isPreIPv4 && isNextIPv4) return 1
+    if (!isNextIPv4 && isPreIPv4) return -1
+
+    const preIPBytes = preIP.toByteArray()
+    const nextIPBytes = nextIP.toByteArray()
+
+    for (let i = 0; i < preIPBytes.length; i++) {
+      if (preIPBytes[i] !== nextIPBytes[i]) {
+        return preIPBytes[i] - nextIPBytes[i]
+      }
+    }
+    return 0
+  })
 })
 const sourceIPOpts = ref<{ label: string; value: string[] }[]>([])
 

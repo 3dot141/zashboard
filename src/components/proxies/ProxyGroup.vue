@@ -37,29 +37,11 @@
         />
       </div>
       <div
-        class="text-base-content/80 mt-[2px] flex items-center gap-2"
+        class="text-base-content/80 mt-0.5 flex items-center gap-2"
         @contextmenu.prevent.stop="handlerLatencyTest"
       >
         <div class="flex flex-1 items-center gap-1 text-sm">
-          <template v-if="proxyGroup.now">
-            <LockClosedIcon
-              class="h-4 w-4 shrink-0"
-              v-if="proxyGroup.fixed === proxyGroup.now"
-              @mouseenter="tipForFixed"
-            />
-            <ArrowRightCircleIcon
-              class="h-4 w-4 shrink-0"
-              v-else
-            />
-            <ProxyName
-              :name="proxyGroup.now"
-              @mouseenter="tipForNow"
-            />
-          </template>
-          <template v-else-if="proxyGroup.type.toLowerCase() === PROXY_TYPE.LoadBalance">
-            <CheckCircleIcon class="h-4 w-4 shrink-0" />
-            {{ $t('loadBalance') }}
-          </template>
+          <ProxyGroupNow :name="name" />
         </div>
         <div class="min-w-12 shrink-0 text-right text-xs">
           {{ prettyBytesHelper(downloadTotal) }}/s
@@ -71,22 +53,17 @@
         :nodes="renderProxies"
         :now="proxyGroup.now"
         :groupName="proxyGroup.name"
-        @nodeclick="handlerProxySelect($event)"
+        @nodeclick="handlerProxySelect(name, $event)"
       />
     </template>
     <template v-slot:content="{ showFullContent }">
-      <ProxyNodeGrid>
-        <ProxyNodeCard
-          v-for="node in showFullContent
-            ? renderProxies
-            : renderProxies.slice(0, twoColumnProxyGroup ? 48 : 96)"
-          :key="node"
-          :name="node"
-          :group-name="proxyGroup.name"
-          :active="node === proxyGroup.now"
-          @click="handlerProxySelect(node)"
-        />
-      </ProxyNodeGrid>
+      <Component
+        :is="groupProxiesByProvider ? ProxiesByProvider : ProxiesContent"
+        :name="name"
+        :now="proxyGroup.now"
+        :render-proxies="renderProxies"
+        :show-full-content="showFullContent"
+      />
     </template>
   </CollapseCard>
 </template>
@@ -94,34 +71,25 @@
 <script setup lang="ts">
 import { useBounceOnVisible } from '@/composables/bouncein'
 import { useRenderProxies } from '@/composables/renderProxies'
-import { PROXY_TYPE } from '@/constant'
-import { isHiddenGroup, prettyBytesHelper } from '@/helper'
-import { useTooltip } from '@/helper/tooltip'
+import { isHiddenGroup } from '@/helper'
+import { prettyBytesHelper } from '@/helper/utils'
 import { activeConnections } from '@/store/connections'
 import {
-  fetchProxies,
-  getNowProxyNodeName,
+  handlerProxySelect,
   hiddenGroupMap,
   proxyGroupLatencyTest,
   proxyMap,
-  selectProxy,
 } from '@/store/proxies'
-import { manageHiddenGroup, twoColumnProxyGroup } from '@/store/settings'
-import {
-  ArrowRightCircleIcon,
-  CheckCircleIcon,
-  EyeIcon,
-  EyeSlashIcon,
-  LockClosedIcon,
-} from '@heroicons/vue/24/outline'
+import { groupProxiesByProvider, manageHiddenGroup } from '@/store/settings'
+import { EyeIcon, EyeSlashIcon } from '@heroicons/vue/24/outline'
 import { twMerge } from 'tailwind-merge'
 import { computed, ref } from 'vue'
-import { useI18n } from 'vue-i18n'
 import CollapseCard from '../common/CollapseCard.vue'
 import LatencyTag from './LatencyTag.vue'
+import ProxiesByProvider from './ProxiesByProvider.vue'
+import ProxiesContent from './ProxiesContent.vue'
+import ProxyGroupNow from './ProxyGroupNow.vue'
 import ProxyName from './ProxyName.vue'
-import ProxyNodeCard from './ProxyNodeCard.vue'
-import ProxyNodeGrid from './ProxyNodeGrid.vue'
 import ProxyPreview from './ProxyPreview.vue'
 
 const props = defineProps<{
@@ -159,34 +127,6 @@ const hiddenGroup = computed({
 
 const handlerGroupToggle = () => {
   hiddenGroup.value = !hiddenGroup.value
-}
-
-const { showTip } = useTooltip()
-const tipForNow = (e: Event) => {
-  const nowNode = getNowProxyNodeName(props.name)
-  if (!nowNode || nowNode === proxyGroup.value.now) return
-
-  showTip(e, nowNode, {
-    delay: [500, 0],
-  })
-}
-
-const { t } = useI18n()
-const tipForFixed = (e: Event) => {
-  showTip(e, t('tipForFixed'), {
-    delay: [500, 0],
-  })
-}
-
-const handlerProxySelect = async (name: string) => {
-  if (proxyGroup.value.type.toLowerCase() === PROXY_TYPE.LoadBalance) return
-
-  if (proxyGroup.value.now === name) {
-    await fetchProxies()
-    if (proxyGroup.value.now === name) return
-  }
-
-  selectProxy(props.name, name)
 }
 
 useBounceOnVisible()

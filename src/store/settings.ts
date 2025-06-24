@@ -2,6 +2,8 @@ import {
   CONNECTIONS_TABLE_ACCESSOR_KEY,
   DETAILED_CARD_STYLE,
   FONTS,
+  GLOBAL,
+  IP_INFO_API,
   LANG,
   PROXY_CARD_SIZE,
   PROXY_CHAIN_DIRECTION,
@@ -80,11 +82,15 @@ export const dashboardTransparent = useStorage('config/dashboard-transparent', 9
 export const autoUpgrade = useStorage('config/auto-upgrade', false)
 export const checkUpgradeCore = useStorage('config/check-upgrade-core', true)
 export const autoUpgradeCore = useStorage('config/auto-upgrade-core', false)
+export const swipeInPages = useStorage('config/swipe-in-pages', true)
 export const swipeInTabs = useStorage('config/swipe-in-tabs', false)
 export const disablePullToRefresh = useStorage('config/disable-pull-to-refresh', true)
 export const displayAllFeatures = useStorage('config/display-all-features', false)
 export const blurIntensity = useStorage('config/blur-intensity', 10)
 export const scrollAnimationEffect = useStorage('config/scroll-animation-effect', true)
+export const IPInfoAPI = useStorage('config/geoip-info-api', IP_INFO_API.IPSB)
+export const autoDisconnectIdleUDP = useStorage('config/auto-disconnect-idle-udp', false)
+export const autoDisconnectIdleUDPTime = useStorage('config/auto-disconnect-idle-udp-time', 300)
 
 // overview
 export const splitOverviewPage = useStorage('config/split-overview-page', false)
@@ -99,6 +105,7 @@ export const numberOfChartsInSidebar = useStorage<1 | 2 | 3>(
   'config/number-of-charts-in-sidebar',
   2,
 )
+export const displayProxiesRelationship = useStorage('config/display-proxies-relationship', true)
 
 // proxies
 export const collapseGroupMap = useStorage<Record<string, boolean>>('config/collapse-group-map', {})
@@ -128,6 +135,7 @@ export const minProxyCardWidth = useStorage<number>(
 export const manageHiddenGroup = useStorage('config/manage-hidden-group-mode', false)
 
 export const displayGlobalByMode = useStorage('config/display-global-by-mode', false)
+export const customGlobalNode = useStorage('config/custom-global-node-name', GLOBAL)
 export const iconSize = useStorage('config/icon-size', 14)
 export const iconMarginRight = useStorage('config/icon-margin-right', 6)
 export const proxyCountMode = useStorage('config/proxies-count-mode', PROXY_COUNT_MODE.ALIVE_TOTAL)
@@ -138,6 +146,8 @@ export const iconReflectList = useStorage<
     uuid: string
   }[]
 >('config/icon-reflect-list', [])
+export const groupProxiesByProvider = useStorage('config/group-proxies-by-provider', false)
+export const useSmartGroupSort = useStorage('config/use-smart-group-sort', false)
 
 // connections
 export const useConnectionCard = useStorage('config/use-connecticon-card', window.innerWidth < 640)

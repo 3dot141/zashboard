@@ -6,11 +6,11 @@
 }
 
 @theme {
-  --font-MiSans: 'MiSans-VF', 'NotoEmoji', 'system-ui';
-  --font-SarasaUI: 'SarasaUiSC-Regular', 'NotoEmoji', 'system-ui';
-  --font-PingFang: 'PingFangSC-Regular', 'NotoEmoji', 'system-ui';
-  --font-FiraSans: 'Fira Sans', 'NotoEmoji', 'system-ui';
-  --font-SystemUI: 'NotoEmoji', 'system-ui';
+  --font-MiSans: 'MiSans-VF', 'NotoEmoji', system-ui;
+  --font-SarasaUI: 'SarasaUiSC-Regular', 'NotoEmoji', system-ui;
+  --font-PingFang: 'PingFangSC-Regular', 'NotoEmoji', system-ui;
+  --font-FiraSans: 'Fira Sans', 'NotoEmoji', system-ui;
+  --font-SystemUI: 'NotoEmoji', system-ui;
 }
 
 @layer utilities {
@@ -31,6 +31,10 @@
   @apply bg-base-100 rounded-lg shadow-md;
 }
 
+.collapse.transparent-collapse {
+  @apply bg-transparent! shadow-none! backdrop-blur-none!;
+}
+
 @utility select {
   @apply w-auto;
 }
@@ -48,10 +52,17 @@
   }
 }
 
+@utility tab {
+  @apply max-md:min-w-24;
+}
+
 @utility table {
-  & tr {
-    @apply border-b-0;
+  & tr,
+  & th,
+  & td {
+    @apply border-0;
   }
+  @apply border-separate border-spacing-0;
 }
 
 .select.select-sm,
@@ -121,9 +132,23 @@
     .sidebar,
     .ctrls-bar,
     .nav-bar,
-    .modal-box,
-    .table,
-    .table thead {
+    .modal-box {
+      /* prettier-ignore */
+      backdrop-filter: blur($(i)px);
+    }
+
+    .pinned-td {
+      @apply bg-transparent! backdrop-blur-xl;
+    }
+
+    .table thead::before,
+    .table tbody::before {
+      position: absolute;
+      content: '';
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
       /* prettier-ignore */
       backdrop-filter: blur($(i)px);
     }
@@ -160,6 +185,25 @@
 }
 .tippy-box[data-theme^='base'][data-placement^='left'] > .tippy-arrow:before {
   @apply border-l-base-100;
+}
+
+.tippy-box[data-theme^='transparent'] {
+  @apply rounded-lg;
+  .tippy-content {
+    @apply p-0;
+  }
+}
+.tippy-box[data-theme^='transparent'][data-placement^='top'] {
+  @apply -mb-2;
+}
+.tippy-box[data-theme^='transparent'][data-placement^='right'] {
+  @apply -ml-2;
+}
+.tippy-box[data-theme^='transparent'][data-placement^='bottom'] {
+  @apply -mt-2;
+}
+.tippy-box[data-theme^='transparent'][data-placement^='left'] {
+  @apply -mr-2;
 }
 
 .slide-right-enter-active,

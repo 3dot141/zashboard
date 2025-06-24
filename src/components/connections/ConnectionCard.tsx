@@ -1,18 +1,22 @@
 import { disconnectByIdAPI } from '@/api'
 import { useBounceOnVisible } from '@/composables/bouncein'
 import { useConnections } from '@/composables/connections'
-import { CONNECTIONS_TABLE_ACCESSOR_KEY, PROXY_CHAIN_DIRECTION } from '@/constant'
 import {
-  fromNow,
+  CONNECTION_TAB_TYPE,
+  CONNECTIONS_TABLE_ACCESSOR_KEY,
+  PROXY_CHAIN_DIRECTION,
+} from '@/constant'
+import {
   getDestinationFromConnection,
   getDestinationTypeFromConnection,
   getHostFromConnection,
   getInboundUserFromConnection,
-  getIPLabelFromMap,
   getNetworkTypeFromConnection,
   getProcessFromConnection,
-  prettyBytesHelper,
 } from '@/helper'
+import { getIPLabelFromMap } from '@/helper/sourceip'
+import { fromNow, prettyBytesHelper } from '@/helper/utils'
+import { connectionTabShow } from '@/store/connections'
 import { connectionCardLines, proxyChainDirection } from '@/store/settings'
 import type { Connection } from '@/types'
 import {
@@ -142,10 +146,16 @@ export default defineComponent<{
           onClick={() => handlerInfo(conn)}
         >
           {connectionCardLines.value.map((line) => (
-            <div class="flex items-center gap-1 text-sm">
-              {line.map((key) => {
-                return componentMap[key]
-              })}
+            <div class="flex h-5 items-center gap-1 text-sm">
+              {line
+                .filter(
+                  (key) =>
+                    key !== CONNECTIONS_TABLE_ACCESSOR_KEY.Close ||
+                    connectionTabShow.value !== CONNECTION_TAB_TYPE.CLOSED,
+                )
+                .map((key) => {
+                  return componentMap[key]
+                })}
             </div>
           ))}
         </div>

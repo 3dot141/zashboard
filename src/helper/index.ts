@@ -1,41 +1,20 @@
 import { useNotification } from '@/composables/notification'
-import { proxiesFilter } from '@/composables/proxies'
-import {
-  NOT_CONNECTED,
-  PROXY_CHAIN_DIRECTION,
-  PROXY_SORT_TYPE,
-  PROXY_TYPE,
-  ROUTE_NAME,
-} from '@/constant'
-import { i18n } from '@/i18n'
+import { NOT_CONNECTED, PROXY_CHAIN_DIRECTION, PROXY_TYPE, ROUTE_NAME } from '@/constant'
 import { timeSaved } from '@/store/overview'
-import { getLatencyByName, hiddenGroupMap, proxyMap } from '@/store/proxies'
+import { hiddenGroupMap, proxyMap } from '@/store/proxies'
 import {
   customThemes,
-  hideUnavailableProxies,
   lowLatency,
   mediumLatency,
   proxyChainDirection,
-  proxySortType,
-  sourceIPLabelList,
   splitOverviewPage,
 } from '@/store/settings'
-import type { Backend, Connection } from '@/types'
-import type { AxiosError, AxiosResponse } from 'axios'
+import type { Connection } from '@/types'
 import dayjs from 'dayjs'
-import prettyBytes, { type Options } from 'pretty-bytes'
-import { computed, watch } from 'vue'
-
-export const prettyBytesHelper = (bytes: number, opts?: Options) => {
-  return prettyBytes(bytes, {
-    binary: false,
-    ...opts,
-  })
-}
-
-export const fromNow = (timestamp: string) => {
-  return dayjs(timestamp).fromNow()
-}
+import * as ipaddr from 'ipaddr.js'
+import { head } from 'lodash'
+import { computed } from 'vue'
+import { prettyBytesHelper } from './utils'
 
 export const isProxyGroup = (name: string) => {
   const proxyNode = proxyMap.value[name]
@@ -58,111 +37,6 @@ export const isProxyGroup = (name: string) => {
   ].includes(proxyNode.type.toLowerCase() as PROXY_TYPE)
 }
 
-export const sortAndFilterProxyNodes = (proxies: string[], groupName?: string) => {
-  const latencyMap = new Map<string, number>()
-  const getLatencyForSort = (name: string) => {
-    if (isProxyGroup(name)) {
-      return -1
-    }
-    const latency = latencyMap.get(name)!
-
-    return latency === 0 ? Infinity : latency
-  }
-
-  proxies = [...proxies]
-  proxies.forEach((name) => {
-    latencyMap.set(name, getLatencyByName(name, groupName))
-  })
-
-  if (hideUnavailableProxies.value) {
-    proxies = proxies.filter((name) => {
-      return isProxyGroup(name) || latencyMap.get(name)! > 0
-    })
-  }
-
-  if (proxiesFilter.value) {
-    proxies = proxies.filter((name) => {
-      return name.toLowerCase().includes(proxiesFilter.value.toLowerCase())
-    })
-  }
-
-  switch (proxySortType.value) {
-    case PROXY_SORT_TYPE.DEFAULT:
-      return proxies
-    case PROXY_SORT_TYPE.NAME_ASC:
-      return proxies.sort((prev, next) => prev.localeCompare(next))
-    case PROXY_SORT_TYPE.NAME_DESC:
-      return proxies.sort((prev, next) => next.localeCompare(prev))
-    case PROXY_SORT_TYPE.LATENCY_ASC:
-      return proxies.sort((prev, next) => getLatencyForSort(prev) - getLatencyForSort(next))
-    case PROXY_SORT_TYPE.LATENCY_DESC:
-      return proxies.sort((prev, next) => getLatencyForSort(next) - getLatencyForSort(prev))
-  }
-}
-
-const CACHE_SIZE = 256
-const ipLabelCache = new Map<string, string>()
-const sourceIPMap = new Map<string, string>()
-const sourceIPRegexList: { regex: RegExp; label: string }[] = []
-
-const preprocessSourceIPList = () => {
-  ipLabelCache.clear()
-  sourceIPMap.clear()
-  sourceIPRegexList.length = 0
-
-  for (const { key, label } of sourceIPLabelList.value) {
-    if (key.startsWith('/')) {
-      sourceIPRegexList.push({ regex: new RegExp(key.slice(1), 'i'), label })
-    } else {
-      sourceIPMap.set(key, label)
-    }
-  }
-}
-
-const cacheResult = (ip: string, label: string) => {
-  ipLabelCache.set(ip, label)
-
-  if (ipLabelCache.size > CACHE_SIZE) {
-    const firstKey = ipLabelCache.keys().next().value
-
-    if (firstKey) {
-      ipLabelCache.delete(firstKey)
-    }
-  }
-
-  return label
-}
-
-watch(sourceIPLabelList, preprocessSourceIPList, { immediate: true, deep: true })
-
-export const getIPLabelFromMap = (ip: string) => {
-  if (!ip) return ip === '' ? 'Inner' : ''
-
-  if (ipLabelCache.has(ip)) {
-    return ipLabelCache.get(ip)!
-  }
-
-  const isIPv6 = ip.includes(':')
-
-  if (isIPv6) {
-    for (const [key, label] of sourceIPMap.entries()) {
-      if (ip.endsWith(key)) {
-        return cacheResult(ip, label)
-      }
-    }
-  } else if (sourceIPMap.has(ip)) {
-    return cacheResult(ip, sourceIPMap.get(ip)!)
-  }
-
-  for (const { regex, label } of sourceIPRegexList) {
-    if (regex.test(ip)) {
-      return cacheResult(ip, label)
-    }
-  }
-
-  return cacheResult(ip, ip)
-}
-
 export const getHostFromConnection = (connection: Connection) => {
   return `${connection.metadata.host || connection.metadata.sniffHost || connection.metadata.destinationIP}:${
     connection.metadata.destinationPort
@@ -178,18 +52,24 @@ export const getProcessFromConnection = (connection: Connection) => {
 }
 
 export const getDestinationFromConnection = (connection: Connection) => {
+  const finalProxyType = proxyMap.value[head(connection.chains) || '']?.type.toLowerCase()
+
+  if (finalProxyType === PROXY_TYPE.Direct && connection.metadata.remoteDestination) {
+    return connection.metadata.remoteDestination
+  }
+
   return connection.metadata.destinationIP || connection.metadata.host
 }
 
 export const getDestinationTypeFromConnection = (connection: Connection) => {
-  const destinationIP = connection.metadata.destinationIP
+  const destination = getDestinationFromConnection(connection)
 
-  if (!destinationIP) {
-    return 'FQDN'
-  } else if (destinationIP.includes(':')) {
+  if (ipaddr.IPv4.isIPv4(destination)) {
+    return 'IPv4'
+  } else if (ipaddr.IPv6.isIPv6(destination)) {
     return 'IPv6'
   } else {
-    return 'IPv4'
+    return 'FQDN'
   }
 }
 
@@ -239,28 +119,6 @@ export const getToolTipForParams = (
     </div>`
 }
 
-export const exportSettings = () => {
-  const settings: Record<string, string | null> = {}
-
-  for (const key in localStorage) {
-    if (key.startsWith('config/') || key.startsWith('setup/')) {
-      settings[key] = localStorage.getItem(key)
-    }
-  }
-
-  const blob = new Blob([JSON.stringify(settings, null, 2)], { type: 'application/json' })
-  const url = URL.createObjectURL(blob)
-  const a = document.createElement('a')
-  a.href = url
-  a.download = 'zashboard-settings'
-  a.click()
-  URL.revokeObjectURL(url)
-}
-
-export const getUrlFromBackend = (end: Omit<Backend, 'uuid'>) => {
-  return `${end.protocol}://${end.host}:${end.port}${end.secondaryPath || ''}`
-}
-
 export const getColorForLatency = (latency: number) => {
   if (latency === NOT_CONNECTED) {
     return ''
@@ -307,18 +165,11 @@ export const isHiddenGroup = (group: string) => {
   return proxyMap.value[group]?.hidden
 }
 
-export const handlerUpgradeResponse = (res: AxiosResponse | AxiosError<{ message: string }>) => {
+export const handlerUpgradeSuccess = () => {
   const { showNotification } = useNotification()
 
-  if (res.status === 200) {
-    showNotification({
-      content: i18n.global.t('upgradeSuccess'),
-      type: 'alert-success',
-    })
-  } else {
-    showNotification({
-      content: `${i18n.global.t('upgradeFailed')} ${(res as AxiosError<{ message: string }>).response?.data?.message}`,
-      type: 'alert-error',
-    })
-  }
+  showNotification({
+    content: 'upgradeSuccess',
+    type: 'alert-success',
+  })
 }

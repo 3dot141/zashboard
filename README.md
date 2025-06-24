@@ -1,20 +1,43 @@
 # zashboard
 
-<img src="pc.png" height="350">   <img src="mobile.png" height="350">
+<p align="center">
+  <img src="./readme/pc.png" height="300">
+  <img src="./readme/mobile.png" height="300">
+</p>
+
+## **Requirement**
+
+Browser support
+
+- Chrome 111 (released March 2023)
+- Firefox 128 (released July 2024)
+- Safari 16.4 (released March 2023)
+- Not supported on iOS 16.4 jailbroken version.
 
 ## **Online**
+
 You can access the online zashboard at the following link:
+
 - [Online zashboard](http://board.zash.run.place)
 
 ## **Download**
+
 For **Mihomo** users:
 The **Upgrade Dashboard** function utilizes the API from Mihomo core. Ensure you set the [configuration URL](https://wiki.metacubex.one/config/general/#_9) to the zashboard's URL.
 
 You can download the zashboard files here:
-- [dist.zip (7.64MB)](https://github.com/Zephyruso/zashboard/releases/latest/download/dist.zip) – Includes better font-loading experience.
-- [dist-cdn-fonts.zip (1.27MB)](https://github.com/Zephyruso/zashboard/releases/latest/download/dist-cdn-fonts.zip) – Optimized for devices with limited storage.
+
+release:
+
+- [dist.zip (7.7MB)](https://github.com/Zephyruso/zashboard/releases/latest/download/dist.zip) – Includes better font-loading experience.
+- [dist-cdn-fonts.zip (1.3MB)](https://github.com/Zephyruso/zashboard/releases/latest/download/dist-cdn-fonts.zip) – Optimized for devices with limited storage.
+
+dev:
+
+- [gh-pages.zip (7.7MB)](https://github.com/Zephyruso/zashboard/archive/refs/heads/gh-pages.zip)
 
 ## **Docker Setup**
+
 To run zashboard via Docker, use the following command:
 
 ```
@@ -24,20 +47,21 @@ docker run -d -p 80:80 ghcr.io/zephyruso/zashboard:latest
 ## Tips
 
 1. The connection page has two layout styles: customizable cards and customizable tables. It is recommended to use tables on PC and cards on mobile devices.
-2. Click on connection row / card will display the details of connection.
+2. The connection table can be dragged with the left mouse button, and right-clicking can copy cell content.
 3. Right-clicking on a node / node group card will perform a speedtest for the node / node group.
 4. You can enable the automatic show/hide of the Global node in the settings.
 
 ## 提示
 
 1. 连接页面有两种布局样式：可自定义卡片和可自定义表格。建议在 PC 上使用表格，在移动设备上使用卡片。
-2. 点击整个连接行/卡片可显示连接详情。
+2. 连接表格可被鼠标左键拖动，右键可复制单元格内容。
 3. 右键点击节点/节点组卡片可对节点/节点组进行测速。
 4. 设置中可打开Global节点的自动显示/隐藏
 
 ## URL params format
 
 #### basic example
+
 http://host:port/#/setup?hostname=ipordomain&port=9090&secret=123456
 
 1. **`http` / `https`**
@@ -59,6 +83,7 @@ http://host:port/#/setup?hostname=ipordomain&port=9090&secret=123456
    - Default: An empty string.
 
 5. **`secret`**
+
    - Password for authentication.
 
 6. **`disableUpgradeCore`**

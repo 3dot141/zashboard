@@ -1,14 +1,13 @@
 <script setup lang="ts">
 import { XCircleIcon } from '@heroicons/vue/24/outline'
-import dayjs from 'dayjs'
 import { computed, onMounted, ref, watch } from 'vue'
 import { RouterView } from 'vue-router'
 import { useNotification } from './composables/notification'
 import { FONTS } from './constant'
-import { getBase64FromIndexedDB, isPreferredDark, LOCAL_IMAGE } from './helper/utils'
+import { backgroundImage } from './helper/indexeddb'
+import { isPreferredDark } from './helper/utils'
 import {
   blurIntensity,
-  customBackgroundURL,
   dashboardTransparent,
   disablePullToRefresh,
   font,
@@ -25,35 +24,6 @@ const fontClassMap = {
   [FONTS.SYSTEM_UI]: 'font-SystemUI',
 }
 const fontClassName = computed(() => fontClassMap[font.value])
-const date = dayjs().format('YYYY-MM-DD')
-
-const backgroundInDB = ref('')
-const getBackgroundInDB = async () => {
-  backgroundInDB.value = (await getBase64FromIndexedDB()) || ''
-}
-
-watch(
-  () => customBackgroundURL.value,
-  () => {
-    if (customBackgroundURL.value.includes(LOCAL_IMAGE)) {
-      getBackgroundInDB()
-    }
-  },
-  {
-    immediate: true,
-  },
-)
-
-const backgroundImage = computed(() => {
-  if (!customBackgroundURL.value) {
-    return ''
-  }
-
-  if (customBackgroundURL.value.includes(LOCAL_IMAGE)) {
-    return `background-image: url('${backgroundInDB.value}');`
-  }
-  return `background-image: url('${customBackgroundURL.value}?v=${date}');`
-})
 
 const setThemeColor = () => {
   const themeColor = getComputedStyle(app.value!).getPropertyValue('background-color').trim()

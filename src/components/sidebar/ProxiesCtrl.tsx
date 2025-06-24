@@ -1,24 +1,29 @@
 import { updateProxyProviderAPI } from '@/api'
 import { collapsedBus } from '@/composables/bus'
-import { proxiesFilter, useProxies } from '@/composables/proxies'
+import { renderGroups } from '@/composables/proxies'
 import { PROXY_SORT_TYPE, PROXY_TAB_TYPE } from '@/constant'
 import { getMinCardWidth, isMiddleScreen } from '@/helper/utils'
 import { configs, updateConfigs } from '@/store/config'
 import {
   allProxiesLatencyTest,
   fetchProxies,
+  hasSmartGroup,
+  proxiesFilter,
+  proxiesTabShow,
   proxyGroupList,
   proxyProviederList,
 } from '@/store/proxies'
 import {
   automaticDisconnection,
   collapseGroupMap,
+  groupProxiesByProvider,
   hideUnavailableProxies,
   manageHiddenGroup,
   minProxyCardWidth,
   proxyCardSize,
   proxySortType,
   twoColumnProxyGroup,
+  useSmartGroupSort,
 } from '@/store/settings'
 import {
   ArrowPathIcon,
@@ -43,7 +48,6 @@ export default defineComponent({
   },
   setup(props) {
     const { t } = useI18n()
-    const { proxiesTabShow } = useProxies()
     const isUpgrading = ref(false)
     const isAllLatencyTesting = ref(false)
     const settingsModel = ref(false)
@@ -90,7 +94,6 @@ export default defineComponent({
       }
     }
 
-    const { renderGroups } = useProxies()
     const hasNotCollapsed = computed(() => {
       return renderGroups.value.some((name) => collapseGroupMap.value[name])
     })
@@ -234,7 +237,7 @@ export default defineComponent({
         <TextInput
           class={props.horizontal && !isMiddleScreen.value ? 'w-32 max-w-80 flex-1' : 'w-80'}
           v-model={proxiesFilter.value}
-          placeholder={t('search')}
+          placeholder={`${t('search')} | ${t('searchMultiple')}`}
           clearable={true}
         />
       )
@@ -252,6 +255,24 @@ export default defineComponent({
               <div class="flex items-center gap-2">
                 {t('sortBy')}
                 {sort}
+              </div>
+              {hasSmartGroup.value && (
+                <div class="flex items-center gap-2">
+                  {t('useSmartGroupSort')}
+                  <input
+                    class="toggle"
+                    type="checkbox"
+                    v-model={useSmartGroupSort.value}
+                  />
+                </div>
+              )}
+              <div class="flex items-center gap-2">
+                {t('groupProxiesByProvider')}
+                <input
+                  type="checkbox"
+                  class="toggle"
+                  v-model={groupProxiesByProvider.value}
+                />
               </div>
               <div class="flex items-center gap-2">
                 {t('unavailableProxy')}

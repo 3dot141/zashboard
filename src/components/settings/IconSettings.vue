@@ -18,7 +18,7 @@
     </button>
   </div>
   <div
-    class="collapse rounded-none shadow-none"
+    class="transparent-collapse collapse rounded-none shadow-none"
     :class="dialogVisible ? 'collapse-open' : ''"
   >
     <div class="collapse-content p-0">
@@ -83,11 +83,12 @@ import {
   PlusIcon,
   TrashIcon,
 } from '@heroicons/vue/24/outline'
+import { useSessionStorage } from '@vueuse/core'
 import { v4 as uuid } from 'uuid'
-import { reactive, ref } from 'vue'
+import { reactive } from 'vue'
 import TextInput from '../common/TextInput.vue'
 
-const dialogVisible = ref(false)
+const dialogVisible = useSessionStorage('cache/icon-dialog-visible', false)
 const newIconReflect = reactive({
   name: '',
   icon: '',

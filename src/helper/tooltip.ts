@@ -2,6 +2,7 @@ import tippy, { type Instance, type Props } from 'tippy.js'
 
 let appContent: HTMLElement
 let tippyInstance: Instance | null = null
+let currentTarget: HTMLElement | null = null
 
 export const useTooltip = () => {
   if (!appContent) {
@@ -9,8 +10,12 @@ export const useTooltip = () => {
   }
 
   const showTip = (event: Event, content: string | HTMLElement, config: Partial<Props> = {}) => {
+    if (currentTarget === event.currentTarget) {
+      return
+    }
+
     tippyInstance?.destroy()
-    tippyInstance = tippy(event.target as HTMLElement, {
+    tippyInstance = tippy(event.currentTarget as HTMLElement, {
       content,
       placement: 'top',
       animation: 'scale',
@@ -20,9 +25,12 @@ export const useTooltip = () => {
       onHidden: () => {
         tippyInstance?.destroy()
         tippyInstance = null
+        currentTarget = null
       },
       ...config,
     })
+
+    currentTarget = event.currentTarget as HTMLElement
   }
 
   const hideTip = () => {
@@ -32,5 +40,20 @@ export const useTooltip = () => {
   return {
     showTip,
     hideTip,
+  }
+}
+
+const { showTip } = useTooltip()
+
+export const checkTruncation = (e: Event) => {
+  const target = e.target as HTMLElement
+  const { scrollWidth, clientWidth } = target
+
+  if (scrollWidth > clientWidth) {
+    showTip(e, target.innerText, {
+      delay: [700, 0],
+      trigger: 'mouseenter',
+      touch: ['hold', 500],
+    })
   }
 }
